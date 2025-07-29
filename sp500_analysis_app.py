@@ -24,7 +24,7 @@ def load_sp500_data():
         df = scraper[0]
         st.success("S&P 500 data scraped successfully!")
 
-        # Save to CSV for future direct loading (optional, as caching handles this too)
+        # Save to CSV for future direct loading
         df.to_csv("sp500.csv", index=False)
         return df
     except Exception as e:
@@ -52,7 +52,7 @@ if not df.empty:
     st.write(f"Number of Companies: {len(df)}")
     st.write(f"Number of Columns: {len(df.columns)}")
     # st.write("Dataframe Information:")
-    # st.text(df.info()) # df.info() prints to console, harder to capture. Displaying head and columns is often enough.
+    # st.text(df.info()) # df.info() prints to console, harder to capture.
     st.write("Column Names:")
     st.dataframe(pd.DataFrame(df.columns.tolist(), columns=["Column Name"])) # Display column names nicely
 
@@ -100,7 +100,7 @@ if not df.empty:
     # ------------ SPLITTING HEADQUARTERS LOCATION INTO CITY AND STATE ------------
 
     st.subheader("Splitting Headquarters Location into City and State")
-    def split_headquarters_oneliner(df_input): # Use a different name like df_input to avoid confusion
+    def split_headquarters_oneliner(df_input):
         clean_location = df_input['headquarters_location'].fillna('').astype(str)
         split_cols = clean_location.str.rsplit(',', n=1, expand=True)
         df_input['headquarters_city'] = split_cols[0].str.strip()
@@ -140,7 +140,9 @@ if not df.empty:
             y=sector_counts.index,
             x=sector_counts.values,
             ax=ax,
-            orient='h'
+            orient='h',
+            hue=sector_counts.index,
+            legend=False 
         )
 
         for i, bar in enumerate(bars.patches):
@@ -188,7 +190,9 @@ if not df.empty:
             x=top_states.values,
             y=top_states.index,
             palette='plasma',
-            ax=ax
+            ax=ax,
+            hue=top_states.index,
+            legend=False
         )
 
         for i, bar in enumerate(bars.patches):
@@ -264,7 +268,9 @@ if not df.empty:
             x=top_subindustries.values,
             y=top_subindustries.index,
             palette='magma',
-            ax=ax
+            ax=ax,
+            hue=top_subindustries.index, 
+            legend=False
         )
 
         for i, bar in enumerate(bars.patches):
